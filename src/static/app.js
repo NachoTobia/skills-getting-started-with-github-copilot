@@ -27,7 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
           <p><strong>Participants:</strong></p>
           <ul>
-            ${details.participants.map(participant => `<li>${participant}</li>`).join("")}
+            ${details.participants.map(participant => `
+              <li>
+                ${participant}
+                <button class="delete-participant" data-activity="${name}" data-participant="${participant}">❌</button>
+              </li>
+            `).join("")}
           </ul>
         `;
 
@@ -66,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         signupForm.reset();
+        fetchActivities(); // Refresh activities list dynamically
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
@@ -82,6 +88,32 @@ document.addEventListener("DOMContentLoaded", () => {
       messageDiv.className = "error";
       messageDiv.classList.remove("hidden");
       console.error("Error signing up:", error);
+    }
+  });
+
+  // Handle participant removal
+  activitiesList.addEventListener("click", async (event) => {
+    if (event.target.classList.contains("delete-participant")) {
+      const button = event.target;
+      const activity = button.dataset.activity;
+      const participant = button.dataset.participant;
+
+      try {
+        const response = await fetch(
+          `/activities/${encodeURIComponent(activity)}/unregister?email=${encodeURIComponent(participant)}`,
+          {
+            method: "POST",
+          }
+        );
+
+        if (response.ok) {
+          fetchActivities(); // Refresh activities list
+        } else {
+          console.error("Failed to unregister participant");
+        }
+      } catch (error) {
+        console.error("Error unregistering participant:", error);
+      }
     }
   });
 

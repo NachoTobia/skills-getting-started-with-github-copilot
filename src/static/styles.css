@@ -76,8 +76,8 @@ section h3 {
 
 .activity-card ul {
   margin-top: 10px;
-  padding-left: 20px;
-  list-style-type: disc;
+  padding-left: 0;
+  list-style-type: none;
   color: #555;
 }
 
@@ -146,6 +146,20 @@ button:hover {
 
 .hidden {
   display: none;
+}
+
+/* Style for delete participant button */
+.delete-participant {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.delete-participant:hover {
+  color: darkred;
 }
 
 footer {
